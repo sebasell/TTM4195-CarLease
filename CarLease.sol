@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.0;
 
 /*
   CarLease.sol (Hardened)
@@ -75,7 +75,8 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     uint32 public constant MAX_USAGE_PERCENT = 100;
     uint32 public constant MAX_CREDIT_FACTOR = 1000;
 
-    constructor() ERC721("CourseCarLease", "CCL") {}
+    constructor() ERC721("CourseCarLease", "CCL") Ownable(msg.sender) {}
+
 
     // -----------------------------
     // Seller (owner) functions
@@ -292,35 +293,30 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
      * Use checks-effects-interactions and nonReentrant.
      */
     function claimDepositAndTerminate(uint256 tokenId) external onlyOwner nonReentrant {
-        Lease storage L = leases[tokenId];
-        require(L.exists && L.active, "Active lease required");
+    Lease storage L = leases[tokenId];
+    require(L.exists && L.active, "Active lease required");
 
-        uint64 dueLimit = L.lastPaymentTime + PAYMENT_GRACE;
-        require(block.timestamp > dueLimit, "Payment not overdue yet");
+    uint64 dueLimit = L.lastPaymentTime + PAYMENT_GRACE;
+    require(block.timestamp > dueLimit, "Payment not overdue yet");
 
-        uint256 depositToClaim = L.deposit;
-        address lessee = L.lessee;
+    uint256 depositToClaim = L.deposit;
 
-        // EFFECTS: clear lease and pending lessee
-        L.active = false;
-        L.exists = false;
-        delete pendingLessee[tokenId];
+    // EFFECTS: Clear lease
+    L.active = false;
+    L.exists = false;
+    delete pendingLessee[tokenId];
 
-        // INTERACTIONS: send deposit to owner, then transfer NFT back to owner
-        (bool sent, ) = owner().call{value: depositToClaim}("");
-        require(sent, "Transfer of deposit failed");
+    // INTERACTIONS: Transfer deposit and NFT
+    (bool sent, ) = owner().call{value: depositToClaim}("");
+    require(sent, "Transfer of deposit failed");
 
-        emit DepositClaimed(tokenId, owner(), depositToClaim);
-        emit LeaseTerminated(tokenId, msg.sender, "Default - deposit claimed");
+    emit DepositClaimed(tokenId, owner(), depositToClaim);
+    emit LeaseTerminated(tokenId, msg.sender, "Default - deposit claimed");
 
-        // transfer NFT back to seller
-        if (ownerOf(tokenId) == address(this)) {
-            _safeTransfer(address(this), owner(), tokenId, "");
-        }
-
-        // note: lessee cannot be refunded here (deposit used to cover missed payments)
+    if (ownerOf(tokenId) == address(this)) {
+        _safeTransfer(address(this), owner(), tokenId, "");
     }
-
+}
     /**
      * Buyer can terminate at natural end of lease and get deposit refunded.
      * Checks-effects-interactions + nonReentrant.
