@@ -13,3 +13,11 @@ gas-report.txt
 # Testing
 test-results/
 
+
+# IDE and build artifacts
+.deps/
+.states/
+.DS_Store
+
+# VS Code settings (optional - some prefer to keep)
+# .vscode/
