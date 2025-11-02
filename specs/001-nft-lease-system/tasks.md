@@ -170,28 +170,28 @@
 
 ### Test Tasks (Write FIRST per TDD - RED Phase)
 
-- [ ] T081 [P] [US2] Write test for refund callable after 7-day deadline in test/unit/CarLease.deposits.test.js (FR-021, FR-023, Acceptance 1)
-- [ ] T082 [P] [US2] Write test for full deposit returned to lessee in test/unit/CarLease.deposits.test.js (FR-026, Acceptance 2)
-- [ ] T083 [P] [US2] Write test for lease marked cancelled after refund in test/unit/CarLease.deposits.test.js (FR-027, Acceptance 3)
-- [ ] T084 [P] [US2] Write test for revert when refunding before deadline in test/unit/CarLease.deposits.test.js (FR-021 validation)
-- [ ] T085 [P] [US2] Write test for revert when refunding active lease in test/unit/CarLease.deposits.test.js (FR-023 validation)
-- [ ] T086 [P] [US2] Write test for RefundUnconfirmed event emission in test/unit/CarLease.deposits.test.js (FR-046)
-- [ ] T087 [P] [US2] Write test for ReentrancyGuard on refundUnconfirmedDeposit in test/unit/CarLease.deposits.test.js (FR-034, FR-035)
-- [ ] T088 [P] [US2] Write integration test for refund flow in test/integration/userStory2.refund-flow.test.js (Acceptance 1-3)
+- [x] T081 [P] [US2] Write test for refund callable after 7-day deadline in test/unit/CarLease.deposits.test.js (FR-021, FR-023, Acceptance 1)
+- [x] T082 [P] [US2] Write test for full deposit returned to lessee in test/unit/CarLease.deposits.test.js (FR-026, Acceptance 2)
+- [x] T083 [P] [US2] Write test for lease marked cancelled after refund in test/unit/CarLease.deposits.test.js (FR-027, Acceptance 3)
+- [x] T084 [P] [US2] Write test for revert when refunding before deadline in test/unit/CarLease.deposits.test.js (FR-021 validation)
+- [x] T085 [P] [US2] Write test for revert when refunding active lease in test/unit/CarLease.deposits.test.js (FR-023 validation)
+- [x] T086 [P] [US2] Write test for RefundUnconfirmed event emission in test/unit/CarLease.deposits.test.js (FR-046)
+- [x] T087 [P] [US2] Write test for ReentrancyGuard on refundUnconfirmedDeposit in test/unit/CarLease.deposits.test.js (FR-034, FR-035)
+- [x] T088 [P] [US2] Write integration test for refund flow in test/integration/userStory2.refund-flow.test.js (Acceptance 1-3)
 
 ### Implementation Tasks (GREEN Phase - After Tests Written)
 
-- [ ] T089 [US2] Implement refundUnconfirmedDeposit() function in contracts/CarLease.sol with nonReentrant modifier (FR-021, FR-023, FR-026, FR-027, FR-046)
-- [ ] T090 [US2] Add deadline validation in refundUnconfirmedDeposit() in contracts/CarLease.sol (FR-021)
-- [ ] T091 [US2] Add state reset logic in refundUnconfirmedDeposit() in contracts/CarLease.sol (FR-027)
-- [ ] T092 [US2] Use _sendEther() helper for refund transfer in contracts/CarLease.sol (checks-effects-interactions)
+- [x] T089 [US2] Implement refundUnconfirmedDeposit() function in contracts/CarLease.sol with nonReentrant modifier (FR-021, FR-023, FR-026, FR-027, FR-046)
+- [x] T090 [US2] Add deadline validation in refundUnconfirmedDeposit() in contracts/CarLease.sol (FR-021)
+- [x] T091 [US2] Add state reset logic in refundUnconfirmedDeposit() in contracts/CarLease.sol (FR-027)
+- [x] T092 [US2] Use _sendEther() helper for refund transfer in contracts/CarLease.sol (checks-effects-interactions)
 
 ### Verification
 
-- [ ] T093 [US2] Run unit tests for US2 with npx hardhat test test/unit/CarLease.deposits.test.js
-- [ ] T094 [US2] Run integration test for US2 with npx hardhat test test/integration/userStory2.refund-flow.test.js
-- [ ] T095 [US2] Verify all US2 tests pass (8 total: 7 unit tests + 1 integration test)
-- [ ] T096 [US2] Test refund flow with time manipulation (hardhat-network-helpers)
+- [x] T093 [US2] Run unit tests for US2 with npx hardhat test test/unit/CarLease.deposits.test.js
+- [x] T094 [US2] Run integration test for US2 with npx hardhat test test/integration/userStory2.refund-flow.test.js
+- [x] T095 [US2] Verify all US2 tests pass (8 total: 7 unit tests + 1 integration test)
+- [x] T096 [US2] Test refund flow with time manipulation (hardhat-network-helpers)
 
 ---
 

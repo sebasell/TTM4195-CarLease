@@ -503,6 +503,42 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     }
     
     // ============================================
+    // PUBLIC FUNCTIONS - Deposit Management
+    // ============================================
+    
+    /**
+     * @notice Customer reclaims deposit when dealer fails to confirm
+     * @dev Can only be called after confirmation deadline passes and before dealer confirms (FR-021, FR-023)
+     * @param tokenId NFT ID to refund
+     */
+    function refundUnconfirmedDeposit(uint256 tokenId) external nonReentrant {
+        Lease storage lease = leases[tokenId];
+        
+        // FR-023: Validate lease exists but not confirmed
+        require(lease.exists, "Lease does not exist");
+        require(!lease.active, "Lease already confirmed");
+        
+        // FR-021: Check confirmation deadline has passed
+        require(block.timestamp > lease.confirmDeadline, "Confirmation deadline not passed");
+        
+        // Only lessee can claim refund
+        require(msg.sender == lease.lessee, "Only lessee can claim refund");
+        
+        // FR-026: Store deposit amount before clearing
+        uint256 refundAmount = lease.deposit;
+        require(refundAmount > 0, "No deposit to refund");
+        
+        // FR-027: Clear lease state (mark as cancelled)
+        delete leases[tokenId];
+        
+        // FR-046: Emit event
+        emit RefundUnconfirmed(tokenId, msg.sender, refundAmount);
+        
+        // Transfer refund (checks-effects-interactions pattern)
+        _sendEther(msg.sender, refundAmount);
+    }
+    
+    // ============================================
     // VIEW FUNCTIONS
     // ============================================
     
