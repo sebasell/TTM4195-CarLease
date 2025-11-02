@@ -1,0 +1,25 @@
+{
+  "hardhat": {
+    "chainId": 31337,
+    "carLease": "",
+    "deployedAt": "",
+    "deployer": "",
+    "verified": false
+  },
+  "sepolia": {
+    "chainId": 11155111,
+    "carLease": "",
+    "deployedAt": "",
+    "deployer": "",
+    "verified": false,
+    "explorerUrl": ""
+  },
+  "mumbai": {
+    "chainId": 80001,
+    "carLease": "",
+    "deployedAt": "",
+    "deployer": "",
+    "verified": false,
+    "explorerUrl": ""
+  }
+}
