@@ -308,7 +308,7 @@
 
 ---
 
-## Phase 9: Events & View Functions
+## Phase 9: Events & View Functions ✅
 
 **Purpose**: Ensure all events emit correctly and view functions return accurate data
 
@@ -316,27 +316,27 @@
 
 ### Test Tasks (Write FIRST per TDD - RED Phase)
 
-- [ ] T155 [P] Write test for all events with indexed parameters in test/unit/CarLease.events.test.js (FR-039 through FR-047)
-- [ ] T156 [P] Write test for event data completeness (all state changes included) in test/unit/CarLease.events.test.js (Principle IV)
-- [ ] T157 [P] Write test for getCarMetadata() returns correct data in test/unit/CarLease.views.test.js
-- [ ] T158 [P] Write test for getLease() returns correct data in test/unit/CarLease.views.test.js
-- [ ] T159 [P] Write test for getCommit() returns correct data in test/unit/CarLease.views.test.js
-- [ ] T160 [P] Write test for isPaymentCurrent() returns correct status in test/unit/CarLease.views.test.js
-- [ ] T161 [P] Write test for isCommitmentValid() returns correct status in test/unit/CarLease.views.test.js
+- [x] T155 [P] Write test for all events with indexed parameters in test/unit/CarLease.events.test.js (FR-039 through FR-047)
+- [x] T156 [P] Write test for event data completeness (all state changes included) in test/unit/CarLease.events.test.js (Principle IV)
+- [x] T157 [P] Write test for getCarMetadata() returns correct data in test/unit/CarLease.views.test.js
+- [x] T158 [P] Write test for getLease() returns correct data in test/unit/CarLease.views.test.js
+- [x] T159 [P] Write test for getCommit() returns correct data in test/unit/CarLease.views.test.js
+- [x] T160 [P] Write test for isPaymentCurrent() returns correct status in test/unit/CarLease.views.test.js
+- [x] T161 [P] Write test for isCommitmentValid() returns correct status in test/unit/CarLease.views.test.js
 
 ### Implementation Tasks (GREEN Phase - After Tests Written)
 
-- [ ] T162 [P] Verify all 9 events defined with correct indexed parameters in contracts/CarLease.sol
-- [ ] T163 [P] Verify all events emit in their respective functions in contracts/CarLease.sol
-- [ ] T164 [P] Implement isCommitmentValid() view function in contracts/CarLease.sol
-- [ ] T165 [P] Verify all view functions return accurate data per contracts/CarLease.sol.md
+- [x] T162 [P] Verify all 9 events defined with correct indexed parameters in contracts/CarLease.sol
+- [x] T163 [P] Verify all events emit in their respective functions in contracts/CarLease.sol
+- [x] T164 [P] Implement isCommitmentValid() view function in contracts/CarLease.sol
+- [x] T165 [P] Verify all view functions return accurate data per contracts/CarLease.sol.md
 
 ### Verification
 
-- [ ] T166 Run event tests with npx hardhat test test/unit/CarLease.events.test.js
-- [ ] T167 Run view function tests with npx hardhat test test/unit/CarLease.views.test.js
-- [ ] T168 Verify all events and views tests pass (14 total tests)
-- [ ] T169 Verify event logs can be parsed off-chain (use ethers.js event filters)
+- [x] T166 Run event tests with npx hardhat test test/unit/CarLease.events.test.js (10/10 passing)
+- [x] T167 Run view function tests with npx hardhat test test/unit/CarLease.views.test.js (12/12 passing)
+- [x] T168 Verify all events and views tests pass (22 total tests: 10 events + 12 views)
+- [x] T169 Verify event logs can be parsed off-chain (use ethers.js event filters)
 
 ---
 
