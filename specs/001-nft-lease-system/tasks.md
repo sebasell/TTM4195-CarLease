@@ -47,20 +47,20 @@
 
 ### Tasks
 
-- [ ] T009 Create contracts/CarLease.sol with SPDX license and Solidity ^0.8.0 pragma
-- [ ] T010 Add OpenZeppelin imports (ERC721, Ownable, ReentrancyGuard) to contracts/CarLease.sol
-- [ ] T011 Define contract inheritance: CarLease is ERC721, Ownable, ReentrancyGuard in contracts/CarLease.sol
-- [ ] T012 Define CarMetadata struct in contracts/CarLease.sol per data-model.md
-- [ ] T013 Define Lease struct with struct packing optimization in contracts/CarLease.sol per data-model.md
-- [ ] T014 Define Commit struct in contracts/CarLease.sol per data-model.md
-- [ ] T015 Define storage mappings (carData, leases, commits, _nextTokenId) in contracts/CarLease.sol
-- [ ] T016 Define time constants (REVEAL_WINDOW, CONFIRM_WINDOW, PAYMENT_GRACE) in contracts/CarLease.sol
-- [ ] T017 Define reserved constants (MAX_USAGE_PERCENT, MAX_CREDIT_FACTOR) in contracts/CarLease.sol
-- [ ] T018 Implement constructor with ERC721("CarLeaseOption", "CLO") and Ownable(msg.sender) in contracts/CarLease.sol
-- [ ] T019 Define all 9 events (OptionMinted, CommitPlaced, LeaseSignedRevealed, LeaseConfirmed, MonthlyPaid, LeaseTerminated, DepositClaimed, RefundUnconfirmed, LeaseExtended) in contracts/CarLease.sol per contracts/CarLease.sol.md
-- [ ] T020 Implement internal helper _sendEther(address, uint256) with checks-effects-interactions pattern in contracts/CarLease.sol
-- [ ] T021 Implement internal helper _validateContractOwnsToken(uint256) in contracts/CarLease.sol
-- [ ] T022 Compile contract with npx hardhat compile and verify no errors
+- [x] T009 Create contracts/CarLease.sol with SPDX license and Solidity ^0.8.0 pragma
+- [x] T010 Add OpenZeppelin imports (ERC721, Ownable, ReentrancyGuard) to contracts/CarLease.sol
+- [x] T011 Define contract inheritance: CarLease is ERC721, Ownable, ReentrancyGuard in contracts/CarLease.sol
+- [x] T012 Define CarMetadata struct in contracts/CarLease.sol per data-model.md
+- [x] T013 Define Lease struct with struct packing optimization in contracts/CarLease.sol per data-model.md
+- [x] T014 Define Commit struct in contracts/CarLease.sol per data-model.md
+- [x] T015 Define storage mappings (carData, leases, commits, _nextTokenId) in contracts/CarLease.sol
+- [x] T016 Define time constants (REVEAL_WINDOW, CONFIRM_WINDOW, PAYMENT_GRACE) in contracts/CarLease.sol
+- [x] T017 Define reserved constants (MAX_USAGE_PERCENT, MAX_CREDIT_FACTOR) in contracts/CarLease.sol
+- [x] T018 Implement constructor with ERC721("CarLeaseOption", "CLO") and Ownable(msg.sender) in contracts/CarLease.sol
+- [x] T019 Define all 9 events (OptionMinted, CommitPlaced, LeaseSignedRevealed, LeaseConfirmed, MonthlyPaid, LeaseTerminated, DepositClaimed, RefundUnconfirmed, LeaseExtended) in contracts/CarLease.sol per contracts/CarLease.sol.md
+- [x] T020 Implement internal helper _sendEther(address, uint256) with checks-effects-interactions pattern in contracts/CarLease.sol
+- [x] T021 Implement internal helper _validateContractOwnsToken(uint256) in contracts/CarLease.sol
+- [x] T022 Compile contract with npx hardhat compile and verify no errors
 
 ---
 
