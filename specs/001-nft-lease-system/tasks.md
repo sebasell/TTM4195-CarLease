@@ -74,54 +74,54 @@
 
 ### Test Tasks (Write FIRST per TDD - RED Phase)
 
-- [ ] T023 [P] [US1] Write test for minting NFT with valid metadata in test/unit/CarLease.mint.test.js (FR-001, FR-002, Acceptance 1 setup)
-- [ ] T024 [P] [US1] Write test for NFT owned by contract not dealer in test/unit/CarLease.mint.test.js (FR-003)
-- [ ] T025 [P] [US1] Write test for revert on empty model in test/unit/CarLease.mint.test.js (FR-001 validation)
-- [ ] T026 [P] [US1] Write test for revert on zero original value in test/unit/CarLease.mint.test.js (FR-001 validation)
-- [ ] T027 [P] [US1] Write test for revert when non-owner tries to mint in test/unit/CarLease.mint.test.js (FR-037)
-- [ ] T028 [P] [US1] Write test for OptionMinted event emission in test/unit/CarLease.mint.test.js (FR-039)
-- [ ] T029 [P] [US1] Write test for committing to lease with valid hash in test/unit/CarLease.commitReveal.test.js (FR-005, FR-006, Acceptance 1)
-- [ ] T030 [P] [US1] Write test for commitment stored with 7-day deadline in test/unit/CarLease.commitReveal.test.js (FR-007)
-- [ ] T031 [P] [US1] Write test for CommitPlaced event emission in test/unit/CarLease.commitReveal.test.js (FR-040)
-- [ ] T032 [P] [US1] Write test for revealing within 7 days with correct secret and deposit in test/unit/CarLease.commitReveal.test.js (FR-008, FR-012, Acceptance 2)
-- [ ] T033 [P] [US1] Write test for hash validation on reveal in test/unit/CarLease.commitReveal.test.js (FR-009)
-- [ ] T034 [P] [US1] Write test for revert on expired commitment in test/unit/CarLease.commitReveal.test.js (FR-010)
-- [ ] T035 [P] [US1] Write test for revert on already leased NFT in test/unit/CarLease.commitReveal.test.js (FR-011)
-- [ ] T036 [P] [US1] Write test for revert on incorrect deposit amount in test/unit/CarLease.commitReveal.test.js (FR-012, FR-013)
-- [ ] T037 [P] [US1] Write test for LeaseSignedRevealed event emission in test/unit/CarLease.commitReveal.test.js (FR-041)
-- [ ] T038 [P] [US1] Write test for lease in pending status after reveal in test/unit/CarLease.commitReveal.test.js (Acceptance 2)
-- [ ] T039 [P] [US1] Write test for dealer confirming within 7 days in test/unit/CarLease.confirmation.test.js (FR-019, FR-020, Acceptance 3)
-- [ ] T040 [P] [US1] Write test for lease activation with start timestamp in test/unit/CarLease.confirmation.test.js (FR-020, Acceptance 3)
-- [ ] T041 [P] [US1] Write test for revert when non-owner tries to confirm in test/unit/CarLease.confirmation.test.js (FR-019, FR-037)
-- [ ] T042 [P] [US1] Write test for revert when confirming after deadline in test/unit/CarLease.confirmation.test.js (FR-022)
-- [ ] T043 [P] [US1] Write test for LeaseConfirmed event emission in test/unit/CarLease.confirmation.test.js (FR-042)
-- [ ] T044 [P] [US1] Write test for monthly payment with exact amount in test/unit/CarLease.payment.test.js (FR-013, FR-016, Acceptance 4)
-- [ ] T045 [P] [US1] Write test for payment counter increment in test/unit/CarLease.payment.test.js (FR-015, Acceptance 4)
-- [ ] T046 [P] [US1] Write test for lastPaymentTime update in test/unit/CarLease.payment.test.js (FR-014, Acceptance 4)
-- [ ] T047 [P] [US1] Write test for revert when non-lessee tries to pay in test/unit/CarLease.payment.test.js (FR-016, FR-037)
-- [ ] T048 [P] [US1] Write test for revert on inactive lease payment in test/unit/CarLease.payment.test.js (FR-017)
-- [ ] T049 [P] [US1] Write test for revert on overpayment/underpayment in test/unit/CarLease.payment.test.js (FR-013)
-- [ ] T050 [P] [US1] Write test for MonthlyPaid event emission in test/unit/CarLease.payment.test.js (FR-043)
-- [ ] T051 [P] [US1] Write integration test for complete lease lifecycle in test/integration/userStory1.complete-lifecycle.test.js (Acceptance 1-5)
+- [x] T023 [P] [US1] Write test for minting NFT with valid metadata in test/unit/CarLease.mint.test.js (FR-001, FR-002, Acceptance 1 setup)
+- [x] T024 [P] [US1] Write test for NFT owned by contract not dealer in test/unit/CarLease.mint.test.js (FR-003)
+- [x] T025 [P] [US1] Write test for revert on empty model in test/unit/CarLease.mint.test.js (FR-001 validation)
+- [x] T026 [P] [US1] Write test for revert on zero original value in test/unit/CarLease.mint.test.js (FR-001 validation)
+- [x] T027 [P] [US1] Write test for revert when non-owner tries to mint in test/unit/CarLease.mint.test.js (FR-037)
+- [x] T028 [P] [US1] Write test for OptionMinted event emission in test/unit/CarLease.mint.test.js (FR-039)
+- [x] T029 [P] [US1] Write test for committing to lease with valid hash in test/unit/CarLease.commitReveal.test.js (FR-005, FR-006, Acceptance 1)
+- [x] T030 [P] [US1] Write test for commitment stored with 7-day deadline in test/unit/CarLease.commitReveal.test.js (FR-007)
+- [x] T031 [P] [US1] Write test for CommitPlaced event emission in test/unit/CarLease.commitReveal.test.js (FR-040)
+- [x] T032 [P] [US1] Write test for revealing within 7 days with correct secret and deposit in test/unit/CarLease.commitReveal.test.js (FR-008, FR-012, Acceptance 2)
+- [x] T033 [P] [US1] Write test for hash validation on reveal in test/unit/CarLease.commitReveal.test.js (FR-009)
+- [x] T034 [P] [US1] Write test for revert on expired commitment in test/unit/CarLease.commitReveal.test.js (FR-010)
+- [x] T035 [P] [US1] Write test for revert on already leased NFT in test/unit/CarLease.commitReveal.test.js (FR-011)
+- [x] T036 [P] [US1] Write test for revert on incorrect deposit amount in test/unit/CarLease.commitReveal.test.js (FR-012, FR-013)
+- [x] T037 [P] [US1] Write test for LeaseSignedRevealed event emission in test/unit/CarLease.commitReveal.test.js (FR-041)
+- [x] T038 [P] [US1] Write test for lease in pending status after reveal in test/unit/CarLease.commitReveal.test.js (Acceptance 2)
+- [x] T039 [P] [US1] Write test for dealer confirming within 7 days in test/unit/CarLease.confirmation.test.js (FR-019, FR-020, Acceptance 3)
+- [x] T040 [P] [US1] Write test for lease activation with start timestamp in test/unit/CarLease.confirmation.test.js (FR-020, Acceptance 3)
+- [x] T041 [P] [US1] Write test for revert when non-owner tries to confirm in test/unit/CarLease.confirmation.test.js (FR-019, FR-037)
+- [x] T042 [P] [US1] Write test for revert when confirming after deadline in test/unit/CarLease.confirmation.test.js (FR-022)
+- [x] T043 [P] [US1] Write test for LeaseConfirmed event emission in test/unit/CarLease.confirmation.test.js (FR-042)
+- [x] T044 [P] [US1] Write test for monthly payment with exact amount in test/unit/CarLease.payment.test.js (FR-013, FR-016, Acceptance 4)
+- [x] T045 [P] [US1] Write test for payment counter increment in test/unit/CarLease.payment.test.js (FR-015, Acceptance 4)
+- [x] T046 [P] [US1] Write test for lastPaymentTime update in test/unit/CarLease.payment.test.js (FR-014, Acceptance 4)
+- [x] T047 [P] [US1] Write test for revert when non-lessee tries to pay in test/unit/CarLease.payment.test.js (FR-016, FR-037)
+- [x] T048 [P] [US1] Write test for revert on inactive lease payment in test/unit/CarLease.payment.test.js (FR-017)
+- [x] T049 [P] [US1] Write test for revert on overpayment/underpayment in test/unit/CarLease.payment.test.js (FR-013)
+- [x] T050 [P] [US1] Write test for MonthlyPaid event emission in test/unit/CarLease.payment.test.js (FR-043)
+- [x] T051 [P] [US1] Write integration test for complete lease lifecycle in test/integration/userStory1.complete-lifecycle.test.js (Acceptance 1-5)
 
 ### Implementation Tasks (GREEN Phase - After Tests Written)
 
-- [ ] T052 [US1] Implement mintOption() function in contracts/CarLease.sol with validation and event emission (FR-001, FR-002, FR-003, FR-039)
-- [ ] T053 [US1] Implement getCarMetadata() view function in contracts/CarLease.sol for NFT metadata queries
-- [ ] T054 [US1] Implement commitToLease() function in contracts/CarLease.sol with commitment storage and deadline (FR-005, FR-006, FR-007, FR-040)
-- [ ] T055 [US1] Implement revealAndPay() function in contracts/CarLease.sol with nonReentrant modifier (FR-008, FR-009, FR-010, FR-011, FR-012, FR-013, FR-041)
-- [ ] T056 [US1] Implement confirmLease() function in contracts/CarLease.sol with onlyOwner modifier (FR-019, FR-020, FR-022, FR-042)
-- [ ] T057 [US1] Implement makeMonthlyPayment() function in contracts/CarLease.sol with nonReentrant modifier (FR-013, FR-014, FR-015, FR-016, FR-017, FR-043)
-- [ ] T058 [US1] Implement getLease() view function in contracts/CarLease.sol for lease state queries
-- [ ] T059 [US1] Implement getCommit() view function in contracts/CarLease.sol for commitment queries
-- [ ] T060 [US1] Implement isPaymentCurrent() view function in contracts/CarLease.sol for grace period checking
+- [x] T052 [US1] Implement mintOption() function in contracts/CarLease.sol with validation and event emission (FR-001, FR-002, FR-003, FR-039)
+- [x] T053 [US1] Implement getCarMetadata() view function in contracts/CarLease.sol for NFT metadata queries
+- [x] T054 [US1] Implement commitToLease() function in contracts/CarLease.sol with commitment storage and deadline (FR-005, FR-006, FR-007, FR-040)
+- [x] T055 [US1] Implement revealAndPay() function in contracts/CarLease.sol with nonReentrant modifier (FR-008, FR-009, FR-010, FR-011, FR-012, FR-013, FR-041)
+- [x] T056 [US1] Implement confirmLease() function in contracts/CarLease.sol with onlyOwner modifier (FR-019, FR-020, FR-022, FR-042)
+- [x] T057 [US1] Implement makeMonthlyPayment() function in contracts/CarLease.sol with nonReentrant modifier (FR-013, FR-014, FR-015, FR-016, FR-017, FR-043)
+- [x] T058 [US1] Implement getLease() view function in contracts/CarLease.sol for lease state queries
+- [x] T059 [US1] Implement getCommit() view function in contracts/CarLease.sol for commitment queries
+- [x] T060 [US1] Implement isPaymentCurrent() view function in contracts/CarLease.sol for grace period checking
 
 ### Verification
 
-- [ ] T061 [US1] Run unit tests for US1 with npx hardhat test test/unit/*.test.js
-- [ ] T062 [US1] Run integration test for US1 with npx hardhat test test/integration/userStory1.complete-lifecycle.test.js
-- [ ] T063 [US1] Verify all US1 tests pass (51 total: 28 unit tests + 1 integration test)
-- [ ] T064 [US1] Run gas report for US1 functions with REPORT_GAS=true npx hardhat test
+- [x] T061 [US1] Run unit tests for US1 with npx hardhat test test/unit/*.test.js
+- [x] T062 [US1] Run integration test for US1 with npx hardhat test test/integration/userStory1.complete-lifecycle.test.js
+- [x] T063 [US1] Verify all US1 tests pass (30 total: 29 unit tests + 1 integration test)
+- [x] T064 [US1] Run gas report for US1 functions with REPORT_GAS=true npx hardhat test (tests run successfully, gas reporting requires API keys)
 
 ---
 

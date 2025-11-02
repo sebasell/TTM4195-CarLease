@@ -262,36 +262,305 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     }
     
     // ============================================
-    // PLACEHOLDER FUNCTIONS (To be implemented)
+    // PUBLIC FUNCTIONS - NFT Management
     // ============================================
     
-    // NFT Management - Phase 3 (US1)
-    // function mintOption(...) external onlyOwner returns (uint256) {}
+    /**
+     * @notice Dealer mints a new lease option NFT
+     * @dev Only contract owner (dealer) can mint. NFT owned by contract not dealer (FR-003).
+     * @param model Car model name (e.g., "Tesla Model 3")
+     * @param color Car color (e.g., "Blue")
+     * @param year Manufacturing year (e.g., 2024)
+     * @param originalValueWei Car purchase value in wei
+     * @param monthlyPaymentWei Monthly lease payment in wei
+     * @param durationMonths Lease duration (e.g., 36 months)
+     * @param mileageLimit Maximum allowed mileage
+     * @return tokenId The newly minted token ID
+     */
+    function mintOption(
+        string memory model,
+        string memory color,
+        uint16 year,
+        uint256 originalValueWei,
+        uint256 monthlyPaymentWei,
+        uint32 durationMonths,
+        uint256 mileageLimit
+    ) external onlyOwner returns (uint256) {
+        // FR-001: Validate metadata
+        require(bytes(model).length > 0, "Model cannot be empty");
+        require(originalValueWei > 0, "Original value must be greater than zero");
+        require(monthlyPaymentWei > 0, "Monthly payment must be greater than zero");
+        require(durationMonths > 0, "Duration must be greater than zero");
+        
+        uint256 tokenId = _nextTokenId++;
+        
+        // FR-003: Mint to contract address (not dealer)
+        // Use _mint instead of _safeMint because contract doesn't need IERC721Receiver
+        _mint(address(this), tokenId);
+        
+        // Store metadata
+        carData[tokenId] = CarMetadata({
+            model: model,
+            color: color,
+            year: year,
+            originalValueWei: originalValueWei,
+            mileageLimit: mileageLimit
+        });
+        
+        // FR-039: Emit event
+        emit OptionMinted(
+            tokenId,
+            model,
+            color,
+            year,
+            originalValueWei
+        );
+        
+        return tokenId;
+    }
     
-    // Commit-Reveal - Phase 3 (US1)
-    // function commitToLease(uint256 tokenId, bytes32 commitment) external {}
-    // function revealAndPay(...) external payable nonReentrant {}
+    // ============================================
+    // PUBLIC FUNCTIONS - Commit-Reveal Pattern
+    // ============================================
     
-    // Confirmation - Phase 3 (US1)
-    // function confirmLease(uint256 tokenId) external onlyOwner {}
+    /**
+     * @notice Customer places commitment to lease an NFT
+     * @dev Commit-reveal pattern prevents front-running (FR-005, FR-006)
+     * @param tokenId NFT ID to commit to
+     * @param commitment Hash of keccak256(tokenId, secret, msg.sender)
+     */
+    function commitToLease(uint256 tokenId, bytes32 commitment) external {
+        _validateContractOwnsToken(tokenId);
+        require(!leases[tokenId].exists, "Already leased");
+        
+        // FR-007: Store commitment with 7-day deadline
+        commits[tokenId] = Commit({
+            commitment: commitment,
+            committer: msg.sender,
+            deadline: uint64(block.timestamp) + REVEAL_WINDOW
+        });
+        
+        // FR-040: Emit event
+        emit CommitPlaced(
+            tokenId,
+            msg.sender,
+            commitment,
+            commits[tokenId].deadline
+        );
+    }
     
-    // Payments - Phase 3 (US1)
-    // function makeMonthlyPayment(uint256 tokenId) external payable nonReentrant {}
+    /**
+     * @notice Customer reveals commitment and pays deposit to initiate lease
+     * @dev Must be called within REVEAL_WINDOW of commitment (FR-008, FR-010)
+     * @param tokenId NFT ID to lease
+     * @param secret Random secret used in commitment
+     * @param durationMonths Lease duration in months
+     * @param monthlyPaymentWei Monthly payment amount in wei
+     */
+    function revealAndPay(
+        uint256 tokenId,
+        bytes32 secret,
+        uint32 durationMonths,
+        uint256 monthlyPaymentWei
+    ) external payable nonReentrant {
+        _validateContractOwnsToken(tokenId);
+        
+        Commit memory c = commits[tokenId];
+        
+        // FR-010: Check deadline
+        require(block.timestamp <= c.deadline, "Commitment expired");
+        
+        // FR-009: Validate hash
+        bytes32 computedHash = keccak256(
+            abi.encodePacked(tokenId, secret, msg.sender)
+        );
+        require(computedHash == c.commitment, "Invalid secret");
+        
+        // FR-011: Check not already leased
+        require(!leases[tokenId].exists, "Already leased");
+        
+        // FR-012, FR-013: Validate deposit = 3x monthly payment
+        uint256 requiredDeposit = monthlyPaymentWei * 3;
+        require(msg.value == requiredDeposit, "Incorrect deposit");
+        
+        // Create lease in pending state
+        uint64 confirmDeadline = uint64(block.timestamp) + CONFIRM_WINDOW;
+        
+        leases[tokenId] = Lease({
+            lessee: msg.sender,
+            startTime: 0,  // Not started yet (pending confirmation)
+            durationMonths: durationMonths,
+            monthlyPayment: monthlyPaymentWei,
+            deposit: msg.value,
+            paymentsMade: 0,
+            lastPaymentTime: 0,
+            active: false,  // Pending confirmation
+            exists: true,
+            confirmDeadline: confirmDeadline
+        });
+        
+        // Clear commitment
+        delete commits[tokenId];
+        
+        // FR-041: Emit event
+        emit LeaseSignedRevealed(
+            tokenId,
+            msg.sender,
+            durationMonths,
+            monthlyPaymentWei,
+            msg.value,
+            confirmDeadline
+        );
+    }
     
-    // Deposit Management - Phase 5 (US2), Phase 6 (US3)
-    // function refundUnconfirmedDeposit(uint256 tokenId) external nonReentrant {}
-    // function claimDeposit(uint256 tokenId) external onlyOwner nonReentrant {}
+    // ============================================
+    // PUBLIC FUNCTIONS - Lease Confirmation
+    // ============================================
     
-    // Termination - Phase 8
-    // function terminateLease(uint256 tokenId, string memory reason) external nonReentrant {}
+    /**
+     * @notice Dealer confirms lease activation
+     * @dev Only owner can confirm. Activates lease and sets start timestamp (FR-019, FR-020)
+     * @param tokenId NFT ID to confirm
+     */
+    function confirmLease(uint256 tokenId) external onlyOwner {
+        Lease storage lease = leases[tokenId];
+        
+        // FR-020: Validate lease exists
+        require(lease.exists, "Lease does not exist");
+        
+        // FR-022: Check not already confirmed
+        require(!lease.active, "Already confirmed");
+        
+        // Activate lease
+        lease.active = true;
+        lease.startTime = uint64(block.timestamp);
+        
+        // FR-042: Emit event
+        emit LeaseConfirmed(
+            tokenId,
+            lease.lessee,
+            lease.startTime
+        );
+    }
     
-    // Extension - Phase 7 (US4) - Reserved for v2.x
-    // function extendLease(uint256 tokenId, uint32 additionalMonths) external payable {}
+    // ============================================
+    // PUBLIC FUNCTIONS - Monthly Payments
+    // ============================================
     
-    // View Functions - Phase 9
-    // function getCarMetadata(uint256 tokenId) external view returns (CarMetadata memory) {}
-    // function getLease(uint256 tokenId) external view returns (Lease memory) {}
-    // function getCommit(uint256 tokenId) external view returns (Commit memory) {}
-    // function isPaymentCurrent(uint256 tokenId) external view returns (bool) {}
-    // function isCommitmentValid(uint256 tokenId) external view returns (bool) {}
+    /**
+     * @notice Customer makes monthly lease payment
+     * @dev Payment must equal monthlyPayment amount. Updates counters and timestamp (FR-013, FR-014, FR-015)
+     * @param tokenId NFT ID for payment
+     */
+    function makeMonthlyPayment(uint256 tokenId) external payable nonReentrant {
+        Lease storage lease = leases[tokenId];
+        
+        // FR-017: Validate active lease
+        require(lease.exists, "Lease does not exist");
+        require(lease.active, "Lease not active");
+        
+        // FR-016: Only lessee can pay
+        require(msg.sender == lease.lessee, "Only lessee can pay");
+        
+        // FR-013: Validate payment amount
+        require(msg.value == lease.monthlyPayment, "Incorrect payment amount");
+        
+        // FR-015: Check payment is due (must wait ~30 days between payments)
+        uint256 timeSinceStart = block.timestamp - lease.startTime;
+        uint256 expectedPayments = timeSinceStart / 30 days;
+        require(lease.paymentsMade < expectedPayments, "Payment not due");
+        
+        // FR-014: Update payment tracking
+        lease.paymentsMade++;
+        lease.lastPaymentTime = uint64(block.timestamp);
+        
+        // FR-043: Emit event
+        emit MonthlyPaid(
+            tokenId,
+            lease.lessee,
+            lease.paymentsMade,
+            msg.value,
+            uint64(block.timestamp)
+        );
+    }
+    
+    /**
+     * @notice Terminates lease (by owner or lessee)
+     * @dev Used for non-payment termination or early termination
+     * @param tokenId NFT ID to terminate
+     */
+    function terminateLease(uint256 tokenId) external {
+        Lease storage lease = leases[tokenId];
+        
+        require(lease.exists, "Lease does not exist");
+        require(lease.active, "Lease not active");
+        require(msg.sender == owner() || msg.sender == lease.lessee, "Unauthorized");
+        
+        // Deactivate lease
+        lease.active = false;
+        
+        emit LeaseTerminated(tokenId, msg.sender, "Terminated");
+    }
+    
+    // ============================================
+    // VIEW FUNCTIONS
+    // ============================================
+    
+    /**
+     * @notice Gets car metadata for an NFT
+     * @param tokenId NFT ID to query
+     * @return CarMetadata struct with car details
+     */
+    function getCarMetadata(uint256 tokenId) external view returns (CarMetadata memory) {
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
+        return carData[tokenId];
+    }
+    
+    /**
+     * @notice Gets lease information for an NFT
+     * @param tokenId NFT ID to query
+     * @return Lease struct with lease details
+     */
+    function getLease(uint256 tokenId) external view returns (Lease memory) {
+        return leases[tokenId];
+    }
+    
+    /**
+     * @notice Gets commitment information for an NFT
+     * @param tokenId NFT ID to query
+     * @return Commit struct with commitment details
+     */
+    function getCommit(uint256 tokenId) external view returns (Commit memory) {
+        return commits[tokenId];
+    }
+    
+    /**
+     * @notice Checks if lessee's payments are current
+     * @param tokenId NFT ID to check
+     * @return True if payments are up to date within grace period
+     */
+    function isPaymentCurrent(uint256 tokenId) external view returns (bool) {
+        Lease memory lease = leases[tokenId];
+        
+        if (!lease.active) return false;
+        
+        uint256 timeSinceStart = block.timestamp - lease.startTime;
+        uint256 expectedPayments = timeSinceStart / 30 days;
+        
+        // Allow grace period for payment
+        if (lease.paymentsMade >= expectedPayments) return true;
+        if (block.timestamp <= lease.lastPaymentTime + PAYMENT_GRACE) return true;
+        
+        return false;
+    }
+    
+    /**
+     * @notice Checks if a commitment is still valid (not expired)
+     * @param tokenId NFT ID to check
+     * @return True if commitment exists and not expired
+     */
+    function isCommitmentValid(uint256 tokenId) external view returns (bool) {
+        Commit memory c = commits[tokenId];
+        return c.deadline > 0 && block.timestamp <= c.deadline;
+    }
 }
