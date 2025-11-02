@@ -538,6 +538,45 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         _sendEther(msg.sender, refundAmount);
     }
     
+    /**
+     * @notice Dealer claims deposit after customer payment default
+     * @dev Can only be called after 45-day grace period expires (FR-024, FR-025, FR-027, FR-030)
+     * @param tokenId NFT ID to claim deposit from
+     */
+    function claimDeposit(uint256 tokenId) external onlyOwner nonReentrant {
+        Lease storage lease = leases[tokenId];
+        
+        // Validate lease exists and is active
+        require(lease.exists, "Lease does not exist");
+        require(lease.active, "Lease not active");
+        
+        // FR-024: Check 45-day grace period has passed since last payment
+        require(
+            block.timestamp > lease.lastPaymentTime + PAYMENT_GRACE,
+            "Payment grace period not expired"
+        );
+        
+        // FR-025: Customer must not be current on payments
+        // (implicitly satisfied if grace period expired, but double-check)
+        uint256 timeSinceStart = block.timestamp - lease.startTime;
+        uint256 expectedPayments = timeSinceStart / 30 days;
+        require(lease.paymentsMade < expectedPayments, "Payments are current");
+        
+        // FR-027: Store deposit amount before clearing
+        uint256 claimAmount = lease.deposit;
+        require(claimAmount > 0, "No deposit to claim");
+        
+        // FR-030: Mark lease as terminated
+        lease.active = false;
+        lease.deposit = 0;
+        
+        // FR-045: Emit event
+        emit DepositClaimed(tokenId, owner(), claimAmount);
+        
+        // Transfer deposit to dealer (checks-effects-interactions pattern)
+        _sendEther(owner(), claimAmount);
+    }
+    
     // ============================================
     // VIEW FUNCTIONS
     // ============================================

@@ -205,30 +205,30 @@
 
 ### Test Tasks (Write FIRST per TDD - RED Phase)
 
-- [ ] T097 [P] [US3] Write test for deposit claimable after 45-day grace period in test/unit/CarLease.deposits.test.js (FR-024, Acceptance 1)
-- [ ] T098 [P] [US3] Write test for deposit transferred to dealer in test/unit/CarLease.deposits.test.js (FR-027, Acceptance 2)
-- [ ] T099 [P] [US3] Write test for lease marked terminated after claim in test/unit/CarLease.deposits.test.js (FR-030, Acceptance 3)
-- [ ] T100 [P] [US3] Write test for revert when claiming before grace period in test/unit/CarLease.deposits.test.js (FR-024 validation)
-- [ ] T101 [P] [US3] Write test for revert when claiming with current payments in test/unit/CarLease.deposits.test.js (FR-025)
-- [ ] T102 [P] [US3] Write test for revert when non-owner tries to claim in test/unit/CarLease.deposits.test.js (FR-037)
-- [ ] T103 [P] [US3] Write test for DepositClaimed event emission in test/unit/CarLease.deposits.test.js (FR-045)
-- [ ] T104 [P] [US3] Write test for ReentrancyGuard on claimDeposit in test/unit/CarLease.deposits.test.js (FR-034, FR-035)
-- [ ] T105 [P] [US3] Write integration test for default flow in test/integration/userStory3.default-flow.test.js (Acceptance 1-3)
+- [x] T097 [P] [US3] Write test for deposit claimable after 45-day grace period in test/unit/CarLease.deposits.test.js (FR-024, Acceptance 1)
+- [x] T098 [P] [US3] Write test for deposit transferred to dealer in test/unit/CarLease.deposits.test.js (FR-027, Acceptance 2)
+- [x] T099 [P] [US3] Write test for lease marked terminated after claim in test/unit/CarLease.deposits.test.js (FR-030, Acceptance 3)
+- [x] T100 [P] [US3] Write test for revert when claiming before grace period in test/unit/CarLease.deposits.test.js (FR-024 validation)
+- [x] T101 [P] [US3] Write test for revert when claiming with current payments in test/unit/CarLease.deposits.test.js (FR-025)
+- [x] T102 [P] [US3] Write test for revert when non-owner tries to claim in test/unit/CarLease.deposits.test.js (FR-037)
+- [x] T103 [P] [US3] Write test for DepositClaimed event emission in test/unit/CarLease.deposits.test.js (FR-045)
+- [x] T104 [P] [US3] Write test for ReentrancyGuard on claimDeposit in test/unit/CarLease.deposits.test.js (FR-034, FR-035)
+- [x] T105 [P] [US3] Write integration test for default flow in test/integration/userStory3.default-flow.test.js (Acceptance 1-3)
 
 ### Implementation Tasks (GREEN Phase - After Tests Written)
 
-- [ ] T106 [US3] Implement claimDeposit() function in contracts/CarLease.sol with onlyOwner and nonReentrant modifiers (FR-024, FR-025, FR-027, FR-045)
-- [ ] T107 [US3] Add grace period validation in claimDeposit() in contracts/CarLease.sol (FR-024: lastPaymentTime + PAYMENT_GRACE)
-- [ ] T108 [US3] Add payment currency check in claimDeposit() in contracts/CarLease.sol (FR-025)
-- [ ] T109 [US3] Add lease termination logic in claimDeposit() in contracts/CarLease.sol (FR-030)
-- [ ] T110 [US3] Use _sendEther() helper for deposit transfer in contracts/CarLease.sol (checks-effects-interactions)
+- [x] T106 [US3] Implement claimDeposit() function in contracts/CarLease.sol with onlyOwner and nonReentrant modifiers (FR-024, FR-025, FR-027, FR-045)
+- [x] T107 [US3] Add grace period validation in claimDeposit() in contracts/CarLease.sol (FR-024: lastPaymentTime + PAYMENT_GRACE)
+- [x] T108 [US3] Add payment currency check in claimDeposit() in contracts/CarLease.sol (FR-025)
+- [x] T109 [US3] Add lease termination logic in claimDeposit() in contracts/CarLease.sol (FR-030)
+- [x] T110 [US3] Use _sendEther() helper for deposit transfer in contracts/CarLease.sol (checks-effects-interactions)
 
 ### Verification
 
-- [ ] T111 [US3] Run unit tests for US3 with npx hardhat test test/unit/CarLease.deposits.test.js
-- [ ] T112 [US3] Run integration test for US3 with npx hardhat test test/integration/userStory3.default-flow.test.js
-- [ ] T113 [US3] Verify all US3 tests pass (9 total: 8 unit tests + 1 integration test)
-- [ ] T114 [US3] Test grace period boundary conditions (exactly 45 days, 44 days, 46 days)
+- [x] T111 [US3] Run unit tests for US3 with npx hardhat test test/unit/CarLease.deposits.test.js
+- [x] T112 [US3] Run integration test for US3 with npx hardhat test test/integration/userStory3.default-flow.test.js
+- [x] T113 [US3] Verify all US3 tests pass (9 total: 8 unit tests + 1 integration test)
+- [x] T114 [US3] Test grace period boundary conditions (exactly 45 days, 44 days, 46 days)
 
 ---
 
