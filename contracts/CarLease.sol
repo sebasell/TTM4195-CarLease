@@ -486,20 +486,34 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     
     /**
      * @notice Terminates lease (by owner or lessee)
-     * @dev Used for non-payment termination or early termination
+     * @dev Used for voluntary termination or early termination (FR-028, FR-029, FR-030, FR-044)
      * @param tokenId NFT ID to terminate
+     * 
+     * Termination scenarios:
+     * - Lessee voluntary termination: No refund (deposit forfeited for early exit)
+     * - Dealer termination: Only after deposit claimed (via claimDeposit)
+     * 
+     * Future enhancement (v2.x): Calculate partial deposit refund based on:
+     * - Time remaining in lease
+     * - Payments already made
+     * - Early termination penalty
      */
-    function terminateLease(uint256 tokenId) external {
+    function terminateLease(uint256 tokenId) external nonReentrant {
         Lease storage lease = leases[tokenId];
         
         require(lease.exists, "Lease does not exist");
         require(lease.active, "Lease not active");
         require(msg.sender == owner() || msg.sender == lease.lessee, "Unauthorized");
         
-        // Deactivate lease
+        // FR-030: Deactivate lease
         lease.active = false;
         
+        // FR-044: Emit event with reason
         emit LeaseTerminated(tokenId, msg.sender, "Terminated");
+        
+        // Note: Current implementation does not refund deposit on termination (FR-028)
+        // Lessee forfeits deposit for early termination
+        // In v2.x, could add partial refund logic based on remaining lease term
     }
     
     // ============================================

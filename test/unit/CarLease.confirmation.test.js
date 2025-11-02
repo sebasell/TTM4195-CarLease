@@ -98,4 +98,22 @@ describe("CarLease - Confirmation (FR-019, FR-020, FR-022)", function () {
       ).to.be.revertedWith("Already confirmed");
     });
   });
+
+  describe("Edge Cases", function () {
+    it("should allow dealer to confirm after deadline (Edge Case 8)", async function () {
+      const { carLease, owner, tokenId } = await loadFixture(revealedLeaseFixture);
+
+      // Fast forward past 7-day confirmation deadline
+      await time.increase(8 * 24 * 60 * 60);
+
+      // Dealer can still confirm (no deadline enforcement for dealer)
+      // Customer can also claim refund at this point
+      await expect(
+        carLease.connect(owner).confirmLease(tokenId)
+      ).to.not.be.reverted;
+
+      const lease = await carLease.getLease(tokenId);
+      expect(lease.active).to.be.true;
+    });
+  });
 });

@@ -139,4 +139,59 @@ describe("CarLease - Monthly Payment (FR-013 to FR-017)", function () {
       }
     });
   });
+
+  describe("Edge Cases", function () {
+    it("should allow payment after lease term if payment is due (Edge Case 3)", async function () {
+      const { carLease, lessee1, tokenId, monthlyPayment } = await loadFixture(activeLeaseFixture);
+
+      // Make first payment
+      await time.increase(31 * 24 * 60 * 60);
+      await carLease.connect(lessee1).makeMonthlyPayment(tokenId, { value: monthlyPayment });
+
+      // Fast forward beyond lease term (36 months)
+      // After 36 months from start, expectedPayments would be 36
+      // With only 1 payment made, more payments are still "due" even though lease term expired
+      await time.increase(36 * 31 * 24 * 60 * 60);
+
+      // Payment should be accepted (catch-up payment)
+      // The contract doesn't enforce "end date", only tracks expected vs actual payments
+      await expect(
+        carLease.connect(lessee1).makeMonthlyPayment(tokenId, { value: monthlyPayment })
+      ).to.not.be.reverted;
+
+      const lease = await carLease.leases(tokenId);
+      expect(lease.paymentsMade).to.equal(2);
+    });
+
+    it("should allow payment exactly at grace period deadline (Edge Case 4)", async function () {
+      const { carLease, lessee1, tokenId, monthlyPayment } = await loadFixture(activeLeaseFixture);
+
+      // Fast forward exactly 45 days (grace period deadline)
+      await time.increase(45 * 24 * 60 * 60);
+
+      // Payment should still be accepted (within grace period)
+      await expect(
+        carLease.connect(lessee1).makeMonthlyPayment(tokenId, { value: monthlyPayment })
+      ).to.not.be.reverted;
+
+      const lease = await carLease.leases(tokenId);
+      expect(lease.paymentsMade).to.equal(1);
+    });
+
+    it("should revert payment with wrong amount (Edge Case 10)", async function () {
+      const { carLease, lessee1, tokenId, monthlyPayment } = await loadFixture(activeLeaseFixture);
+
+      await time.increase(31 * 24 * 60 * 60);
+
+      // Try to pay wrong amount (too much)
+      await expect(
+        carLease.connect(lessee1).makeMonthlyPayment(tokenId, { value: monthlyPayment + 1n })
+      ).to.be.revertedWith("Incorrect payment amount");
+
+      // Try to pay wrong amount (too little)
+      await expect(
+        carLease.connect(lessee1).makeMonthlyPayment(tokenId, { value: monthlyPayment - 1n })
+      ).to.be.revertedWith("Incorrect payment amount");
+    });
+  });
 });

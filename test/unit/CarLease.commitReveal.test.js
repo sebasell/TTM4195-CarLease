@@ -244,4 +244,79 @@ describe("CarLease - Commit-Reveal (FR-005 to FR-012)", function () {
       expect(lease.startTime).to.equal(0); // Not started yet
     });
   });
+
+  describe("Edge Cases", function () {
+    it("should allow overwriting expired commitment (Edge Case 1)", async function () {
+      const { carLease, lessee1, lessee2, tokenId } = await loadFixture(mintedNFTFixture);
+
+      // Lessee1 commits
+      const secret1 = ethers.id("lessee1-secret");
+      const commitment1 = ethers.keccak256(
+        ethers.solidityPacked(
+          ["uint256", "bytes32", "address"],
+          [tokenId, secret1, lessee1.address]
+        )
+      );
+      await carLease.connect(lessee1).commitToLease(tokenId, commitment1);
+
+      // Wait for commitment to expire (>7 days)
+      await time.increase(8 * 24 * 60 * 60);
+
+      // Lessee2 commits (should succeed - old commitment expired)
+      const secret2 = ethers.id("lessee2-secret");
+      const commitment2 = ethers.keccak256(
+        ethers.solidityPacked(
+          ["uint256", "bytes32", "address"],
+          [tokenId, secret2, lessee2.address]
+        )
+      );
+      await expect(
+        carLease.connect(lessee2).commitToLease(tokenId, commitment2)
+      ).to.not.be.reverted;
+
+      // Lessee2 can now reveal
+      const monthlyPayment = ethers.parseEther("0.5");
+      const deposit = monthlyPayment * 3n;
+      await expect(
+        carLease.connect(lessee2).revealAndPay(tokenId, secret2, 36, monthlyPayment, { value: deposit })
+      ).to.not.be.reverted;
+    });
+
+    it("should handle multiple commitments to same lease (Edge Case 7)", async function () {
+      const { carLease, lessee1, lessee2, tokenId } = await loadFixture(mintedNFTFixture);
+
+      // Lessee1 commits
+      const secret1 = ethers.id("lessee1-secret-multiple");
+      const commitment1 = ethers.keccak256(
+        ethers.solidityPacked(
+          ["uint256", "bytes32", "address"],
+          [tokenId, secret1, lessee1.address]
+        )
+      );
+      await carLease.connect(lessee1).commitToLease(tokenId, commitment1);
+
+      // Lessee2 commits immediately (overwrites lessee1's commitment)
+      const secret2 = ethers.id("lessee2-secret-multiple");
+      const commitment2 = ethers.keccak256(
+        ethers.solidityPacked(
+          ["uint256", "bytes32", "address"],
+          [tokenId, secret2, lessee2.address]
+        )
+      );
+      await carLease.connect(lessee2).commitToLease(tokenId, commitment2);
+
+      // Only lessee2 can reveal (last commitment wins)
+      const monthlyPayment = ethers.parseEther("0.5");
+      const deposit = monthlyPayment * 3n;
+      
+      await expect(
+        carLease.connect(lessee2).revealAndPay(tokenId, secret2, 36, monthlyPayment, { value: deposit })
+      ).to.not.be.reverted;
+
+      // Lessee1 cannot reveal (commitment overwritten, will show expired or hash mismatch)
+      await expect(
+        carLease.connect(lessee1).revealAndPay(tokenId, secret1, 36, monthlyPayment, { value: deposit })
+      ).to.be.reverted; // Either "Lease already revealed" or "Commitment expired"
+    });
+  });
 });
