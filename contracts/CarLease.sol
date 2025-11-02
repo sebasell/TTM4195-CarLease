@@ -577,6 +577,50 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         _sendEther(owner(), claimAmount);
     }
     
+    /**
+     * @notice Customer extends active lease for additional months (v2.x Feature)
+     * @dev Reserved for future implementation - currently reverts (FR-031, FR-032, FR-033)
+     * @param tokenId NFT ID to extend
+     * @param additionalMonths Number of months to add to lease
+     * @param newMonthlyPayment New monthly payment amount (can be adjusted)
+     * 
+     * Future Implementation Plan (v2.x):
+     * - Validate lease is active and caller is lessee (FR-037)
+     * - Calculate required additional deposit: newMonthlyPayment * 3 (FR-032)
+     * - Validate msg.value matches additional deposit
+     * - Update lease.durationMonths += additionalMonths (FR-033)
+     * - Update lease.monthlyPayment = newMonthlyPayment (FR-033)
+     * - Update lease.deposit += msg.value
+     * - Emit LeaseExtended event (FR-047)
+     * - Protected with nonReentrant modifier (FR-034, FR-035)
+     * 
+     * Design Considerations:
+     * - Should extension be allowed at any time or only near end?
+     * - Should there be limits on additionalMonths?
+     * - Should monthly payment changes have min/max bounds?
+     * - How to handle deposit refund timing with extensions?
+     */
+    function extendLease(
+        uint256 tokenId,
+        uint256 additionalMonths,
+        uint256 newMonthlyPayment
+    ) external payable nonReentrant {
+        // Placeholder for v2.x implementation
+        revert("Not implemented - reserved for v2.x");
+        
+        // Future implementation would include:
+        // Lease storage lease = leases[tokenId];
+        // require(lease.exists, "Lease does not exist");
+        // require(lease.active, "Lease not active");
+        // require(msg.sender == lease.lessee, "Only lessee can extend");
+        // uint256 additionalDeposit = newMonthlyPayment * 3;
+        // require(msg.value == additionalDeposit, "Incorrect additional deposit");
+        // lease.durationMonths += uint16(additionalMonths);
+        // lease.monthlyPayment = newMonthlyPayment;
+        // lease.deposit += additionalDeposit;
+        // emit LeaseExtended(tokenId, msg.sender, additionalMonths, newMonthlyPayment, additionalDeposit);
+    }
+    
     // ============================================
     // VIEW FUNCTIONS
     // ============================================

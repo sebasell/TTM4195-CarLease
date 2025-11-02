@@ -242,29 +242,29 @@
 
 ### Test Tasks (Write FIRST per TDD - RED Phase)
 
-- [ ] T115 [P] [US4] Write test for extension request with additional months in test/unit/CarLease.termination.test.js (FR-031, Acceptance 1)
-- [ ] T116 [P] [US4] Write test for additional deposit calculation (3x new monthly) in test/unit/CarLease.termination.test.js (FR-032, Acceptance 1)
-- [ ] T117 [P] [US4] Write test for lease duration and payment update in test/unit/CarLease.termination.test.js (FR-033, Acceptance 2)
-- [ ] T118 [P] [US4] Write test for new monthly amount required after extension in test/unit/CarLease.termination.test.js (Acceptance 3)
-- [ ] T119 [P] [US4] Write test for revert when non-lessee tries to extend in test/unit/CarLease.termination.test.js (FR-037)
-- [ ] T120 [P] [US4] Write test for revert when extending inactive lease in test/unit/CarLease.termination.test.js (validation)
-- [ ] T121 [P] [US4] Write test for LeaseExtended event emission in test/unit/CarLease.termination.test.js (FR-047)
-- [ ] T122 [P] [US4] Write test for ReentrancyGuard on extendLease in test/unit/CarLease.termination.test.js (FR-034, FR-035)
-- [ ] T123 [P] [US4] Write integration test for extension flow in test/integration/userStory4.extension-flow.test.js (Acceptance 1-3)
+- [x] T115 [P] [US4] Write test for extension request with additional months in test/unit/CarLease.termination.test.js (FR-031, Acceptance 1)
+- [x] T116 [P] [US4] Write test for additional deposit calculation (3x new monthly) in test/unit/CarLease.termination.test.js (FR-032, Acceptance 1)
+- [x] T117 [P] [US4] Write test for lease duration and payment update in test/unit/CarLease.termination.test.js (FR-033, Acceptance 2)
+- [x] T118 [P] [US4] Write test for new monthly amount required after extension in test/unit/CarLease.termination.test.js (Acceptance 3)
+- [x] T119 [P] [US4] Write test for revert when non-lessee tries to extend in test/unit/CarLease.termination.test.js (FR-037)
+- [x] T120 [P] [US4] Write test for revert when extending inactive lease in test/unit/CarLease.termination.test.js (validation)
+- [x] T121 [P] [US4] Write test for LeaseExtended event emission in test/unit/CarLease.termination.test.js (FR-047)
+- [x] T122 [P] [US4] Write test for ReentrancyGuard on extendLease in test/unit/CarLease.termination.test.js (FR-034, FR-035)
+- [x] T123 [P] [US4] Write integration test for extension flow in test/integration/userStory4.extension-flow.test.js (Acceptance 1-3)
 
 ### Implementation Tasks (GREEN Phase - After Tests Written)
 
-- [ ] T124 [US4] Implement extendLease() function signature in contracts/CarLease.sol (reserve for v2.x per contracts/CarLease.sol.md)
-- [ ] T125 [US4] Add revert message "Not implemented - reserved for v2.x" in extendLease() in contracts/CarLease.sol
-- [ ] T126 [US4] Document extension logic in code comments for future implementation in contracts/CarLease.sol
-- [ ] T127 [US4] Verify LeaseExtended event already defined in contracts/CarLease.sol (FR-047)
+- [x] T124 [US4] Implement extendLease() function signature in contracts/CarLease.sol (reserve for v2.x per contracts/CarLease.sol.md)
+- [x] T125 [US4] Add revert message "Not implemented - reserved for v2.x" in extendLease() in contracts/CarLease.sol
+- [x] T126 [US4] Document extension logic in code comments for future implementation in contracts/CarLease.sol
+- [x] T127 [US4] Verify LeaseExtended event already defined in contracts/CarLease.sol (FR-047)
 
 ### Verification
 
-- [ ] T128 [US4] Run unit tests for US4 expecting revert with npx hardhat test test/unit/CarLease.termination.test.js
-- [ ] T129 [US4] Run integration test for US4 expecting revert with npx hardhat test test/integration/userStory4.extension-flow.test.js
-- [ ] T130 [US4] Verify all US4 tests properly expect "Not implemented" revert (9 total tests)
-- [ ] T131 [US4] Document extension feature as v2.x roadmap item in README.md or ROADMAP.md
+- [x] T128 [US4] Run unit tests for US4 expecting revert with npx hardhat test test/unit/CarLease.termination.test.js
+- [x] T129 [US4] Run integration test for US4 expecting revert with npx hardhat test test/integration/userStory4.extension-flow.test.js
+- [x] T130 [US4] Verify all US4 tests properly expect "Not implemented" revert (9 total tests)
+- [x] T131 [US4] Document extension feature as v2.x roadmap item in README.md or ROADMAP.md
 
 ---
 
