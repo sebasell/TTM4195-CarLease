@@ -26,14 +26,14 @@
 
 ### Tasks
 
-- [ ] T001 Initialize npm project and install Hardhat dependencies per quickstart.md
-- [ ] T002 Install OpenZeppelin contracts v4.9.0+ (ERC721, Ownable, ReentrancyGuard)
-- [ ] T003 Install testing dependencies (@nomicfoundation/hardhat-chai-matchers, hardhat-network-helpers, chai, ethers)
-- [ ] T004 Install gas reporting and coverage tools (hardhat-gas-reporter, solidity-coverage)
-- [ ] T005 Create hardhat.config.js with Sepolia/Mumbai network configuration per quickstart.md
-- [ ] T006 Create .env file with RPC URLs, private key, API keys (add to .gitignore)
-- [ ] T007 Create project directories: contracts/, test/unit/, test/integration/, test/gas/, scripts/
-- [ ] T008 Create test fixtures file at test/fixtures/carLeaseFixture.js with deployment and minting helpers
+- [x] T001 Initialize npm project and install Hardhat dependencies per quickstart.md
+- [x] T002 Install OpenZeppelin contracts v4.9.0+ (ERC721, Ownable, ReentrancyGuard)
+- [x] T003 Install testing dependencies (@nomicfoundation/hardhat-chai-matchers, hardhat-network-helpers, chai, ethers)
+- [x] T004 Install gas reporting and coverage tools (hardhat-gas-reporter, solidity-coverage)
+- [x] T005 Create hardhat.config.js with Sepolia/Mumbai network configuration per quickstart.md
+- [x] T006 Create .env file with RPC URLs, private key, API keys (add to .gitignore)
+- [x] T007 Create project directories: contracts/, test/unit/, test/integration/, test/gas/, scripts/
+- [x] T008 Create test fixtures file at test/fixtures/carLeaseFixture.js with deployment and minting helpers
 
 ---
 
