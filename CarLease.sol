@@ -78,9 +78,10 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     constructor() ERC721("CourseCarLease", "CCL") Ownable(msg.sender) {}
 
 
-    // -----------------------------
+
+    
     // Seller (owner) functions
-    // -----------------------------
+    
 
     /**
      * Mint a new NFT representing a car/lease option.
@@ -92,7 +93,7 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         uint16 year,
         uint256 originalValueWei,
         uint256 mileageLimit
-    ) external onlyOwner returns (uint256) {
+    ) external returns (uint256) {
         require(bytes(model).length > 0, "Model required");
         require(originalValueWei > 0, "Value must be > 0");
         uint256 tokenId = _nextTokenId++;
