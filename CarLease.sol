@@ -93,12 +93,12 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         uint16 year,
         uint256 originalValueWei,
         uint256 mileageLimit
-    ) external returns (uint256) {
-        require(bytes(model).length > 0, "Model required");
-        require(originalValueWei > 0, "Value must be > 0");
+    ) external onlyOwner returns (uint256) {
+        //require(bytes(model).length > 0, "Model required");
+        //require(originalValueWei > 0, "Value must be > 0");
         uint256 tokenId = _nextTokenId++;
         carData[tokenId] = CarMetadata(model, color, year, originalValueWei, mileageLimit);
-        _safeMint(address(this), tokenId);
+        _safeMint(msg.sender, tokenId);
         emit OptionMinted(tokenId, model, originalValueWei);
         return tokenId;
     }
@@ -167,7 +167,7 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         require(durationMonths > 0, "Duration must be > 0");
         require(usagePercent <= MAX_USAGE_PERCENT, "usagePercent out of range");
         require(creditScoreFactor <= MAX_CREDIT_FACTOR, "creditScoreFactor out of range");
-        require(ownerOf(tokenId) == address(this), "Option not available");
+        require(ownerOf(tokenId) == msg.sender, "Option not available");
 
         Commit storage c = commits[tokenId];
         require(c.commitment != bytes32(0), "No commit found");
