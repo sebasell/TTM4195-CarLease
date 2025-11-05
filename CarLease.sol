@@ -112,7 +112,7 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         require(L.exists, "No signed lease");
         require(!L.active, "Lease already active");
 
-        require(pendingLessee[tokenId] != address(0), "No pending lessee");
+        require(pendingLessee[tokenId] != msg.sender, "No pending lessee");
         // confirm deadline must not be passed
         require(block.timestamp <= L.confirmDeadline, "Confirm deadline passed; seller cannot confirm");
 
@@ -136,7 +136,7 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
      * commitDeadline = block.timestamp + REVEAL_WINDOW
      */
     function commitToSign(uint256 tokenId, bytes32 commitment) external {
-        require(ownerOf(tokenId) == address(this), "Option not available");
+        require(ownerOf(tokenId) == msg.sender, "Option not available");
         require(commitment != bytes32(0), "Invalid commitment");
         // ensure no existing commit or previous commit expired
         Commit storage c = commits[tokenId];
@@ -314,8 +314,8 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     emit DepositClaimed(tokenId, owner(), depositToClaim);
     emit LeaseTerminated(tokenId, msg.sender, "Default - deposit claimed");
 
-    if (ownerOf(tokenId) == address(this)) {
-        _safeTransfer(address(this), owner(), tokenId, "");
+    if (ownerOf(tokenId) == msg.sender) {
+        _safeTransfer(msg.sender, owner(), tokenId, "");
     }
 }
     /**
@@ -338,8 +338,8 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
         delete pendingLessee[tokenId];
 
         // INTERACTIONS: transfer NFT to seller then refund deposit to lessee
-        if (ownerOf(tokenId) == address(this)) {
-            _safeTransfer(address(this), owner(), tokenId, "");
+        if (ownerOf(tokenId) == msg.sender) {
+            _safeTransfer(msg.sender, owner(), tokenId, "");
         }
         (bool sent, ) = msg.sender.call{value: depositRefund}("");
         require(sent, "Refund to lessee failed");
@@ -392,8 +392,8 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
     function reclaimNFTToSeller(uint256 tokenId) public onlyOwner nonReentrant {
         Lease storage L = leases[tokenId];
         require(!L.exists || !L.active, "Cannot reclaim while lease active");
-        require(ownerOf(tokenId) == address(this), "Contract does not hold token");
-        _safeTransfer(address(this), owner(), tokenId, "");
+        require(ownerOf(tokenId) == msg.sender, "Contract does not hold token");
+        _safeTransfer(msg.sender, owner(), tokenId, "");
     }
 
     /**
@@ -401,7 +401,7 @@ contract CarLease is ERC721, Ownable, ReentrancyGuard {
      * Only owner (seller) can withdraw.
      */
     function withdrawAccidentalETH(uint256 amount) external onlyOwner nonReentrant {
-        require(amount <= address(this).balance, "Amount exceeds balance");
+        require(amount <= msg.sender.balance, "Amount exceeds balance");
         (bool sent, ) = owner().call{value: amount}("");
         require(sent, "Withdraw failed");
     }
