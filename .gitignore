@@ -1,0 +1,23 @@
+node_modules
+.env
+cache/
+artifacts/
+coverage/
+coverage.json
+typechain-types/
+gas-report.txt
+
+# Hardhat
+.hardhat/
+
+# Testing
+test-results/
+
+
+# IDE and build artifacts
+.deps/
+.states/
+.DS_Store
+
+# VS Code settings (optional - some prefer to keep)
+# .vscode/
