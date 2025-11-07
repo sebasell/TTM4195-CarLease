@@ -1,42 +1,29 @@
 /**
- * Local interaction script for testing deployed CarLease contract
- * Demonstrates a complete lease lifecycle on localhost
+ * Localhost interaction script for testing deployed CarLease contract
+ * Demonstrates a complete lease lifecycle on local Hardhat network
+ * 
+ * Prerequisites:
+ * 1. Start local node: npx hardhat node
+ * 2. Deploy contract: npx hardhat run scripts/deploy.js --network localhost
+ * 3. Run this script: npx hardhat run scripts/interact-localhost.js --network localhost
  */
 
 const { ethers } = require("hardhat");
 
 async function main() {
-  // Get network info first
-  const networkInfo = await ethers.provider.getNetwork();
-  const chainId = Number(networkInfo.chainId);
+  // Hardhat node default first deployment address
+  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   
-  // Default addresses per network
-  const defaultAddresses = {
-    31337: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // localhost
-    11155111: "0xe9A516f0e2210A00584b9c20E26A79109200C5A8"  // sepolia
-  };
-  
-  // Get contract address from env or use network default
-  const contractAddress = process.env.CONTRACT_ADDRESS || defaultAddresses[chainId];
-  
-  if (!contractAddress) {
-    console.error("❌ Error: CONTRACT_ADDRESS not set and no default for this network");
-    console.error("Usage: CONTRACT_ADDRESS=0x... npx hardhat run scripts/interact.js --network <network>");
-    process.exit(1);
-  }
-  
-  console.log("\n🚗 CarLease Contract Interaction Demo");
+  console.log("\n🚗 CarLease Contract - Localhost Interaction Demo");
   console.log("============================================================\n");
 
-  // Get signers - on testnet there's only one account
-  const signers = await ethers.getSigners();
-  const dealer = signers[0];
-  const customer = signers[1] || signers[0]; // Use same account if only one available
+  // Get signers - localhost has multiple test accounts
+  const [dealer, customer] = await ethers.getSigners();
   
-  console.log("🌐 Network:", chainId === 31337 ? 'localhost' : networkInfo.name);
+  console.log("🌐 Network: localhost (Hardhat Network)");
   console.log("👥 Actors:");
   console.log(`   Dealer:   ${dealer.address}`);
-  console.log(`   Customer: ${customer.address}${customer.address === dealer.address ? ' (same as dealer)' : ''}\n`);
+  console.log(`   Customer: ${customer.address}\n`);
 
   // Connect to deployed contract
   const CarLease = await ethers.getContractFactory("CarLease");
@@ -67,7 +54,7 @@ async function main() {
     );
     const mintReceipt = await mintTx.wait();
     
-    // Extract tokenId from LeaseOptionMinted event
+    // Extract tokenId from OptionMinted event
     const event = mintReceipt.logs.find(log => {
       try {
         const parsed = contract.interface.parseLog(log);
@@ -80,9 +67,9 @@ async function main() {
     const tokenId = event ? contract.interface.parseLog(event).args.tokenId : 1n;
     
     console.log(`   ✅ NFT minted: Token ID ${tokenId}`);
-    console.log(`   � Car: ${model} ${color} (${year})`);
+    console.log(`   🚗 Car: ${model} ${color} (${year})`);
     console.log(`   💰 Car value: ${ethers.formatEther(carValue)} ETH`);
-    console.log(`   �💵 Monthly payment: ${ethers.formatEther(monthlyPayment)} ETH`);
+    console.log(`   💵 Monthly payment: ${ethers.formatEther(monthlyPayment)} ETH`);
     console.log(`   📅 Duration: ${numMonths} months`);
     console.log(`   📏 Mileage limit: ${mileageLimit} miles\n`);
 
@@ -124,7 +111,7 @@ async function main() {
     console.log("5️⃣  Customer makes first monthly payment...");
     console.log("   ⏰ Advancing time by 30 days...");
     
-    // Advance time by 30 days to make payment due
+    // Advance time by 30 days to make payment due (only works on local network)
     await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
     await ethers.provider.send("evm_mine");
     
